@@ -1,6 +1,7 @@
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import { useEffect, useState, useRef } from "react";
+import { Link } from "react-router-dom";
 
 const SignUp = () => {
   const [email, setEmail] = useState("");
@@ -102,9 +103,14 @@ const SignUp = () => {
         />
       </Form.Group>
 
-      <Button variant="primary" type="submit">
+      <Button className="m-2" variant="primary" type="submit">
         Signup
       </Button>
+      <Link to="/login">
+        <Button variant="primary" type="submit">
+          Login Screen
+        </Button>
+      </Link>
     </Form>
   );
 };
