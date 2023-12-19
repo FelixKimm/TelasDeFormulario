@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import Table from "react-bootstrap/Table";
 import "bootstrap/dist/css/bootstrap.min.css";
-import Button from "react-bootstrap/Button";
+import TableInfo from "../components/Table";
 import Form from "react-bootstrap/Form";
+import Button from "react-bootstrap/Button";
+// import Edit from "../components/Edit";
 
 const Home = () => {
   const [change, setChange] = useState(true);
@@ -60,67 +62,49 @@ const Home = () => {
               <th>Actions</th>
             </tr>
           </thead>
-          {dataBase.map((m) => (
-            <TableInfo
-              key={m.id}
-              id={m.id}
-              email={m.email}
-              name={m.name}
-              surname={m.surname}
-              deletar={() => deleteBtn(m.id)}
-              trocar={changeRender}
-            />
-          ))}
+          <tbody>
+            {dataBase.map((m) => (
+              <TableInfo
+                key={m.id}
+                id={m.id}
+                email={m.email}
+                name={m.name}
+                surname={m.surname}
+                deletar={() => deleteBtn(m.id)}
+                trocar={changeRender}
+              />
+            ))}
+          </tbody>
         </Table>
       ) : (
-        <Edit trocar={changeRender} />
+        <Edit
+          trocar={changeRender}
+          // id={}
+          // email={}
+          // name={}
+          // surname={}
+        />
       )}
     </>
   );
 };
 
-const TableInfo = ({ id, email, name, surname, deletar, trocar }) => {
-  return (
-    <tbody>
-      <tr key={id}>
-        <td>{id}</td>
-        <td>{name}</td>
-        <td>{surname}</td>
-        <td>{email}</td>
-        <td>
-          <Button
-            style={{ marginRight: "10px" }}
-            variant="primary"
-            type="submit"
-            onClick={trocar}
-          >
-            Edit
-          </Button>
-          <Button variant="primary" type="submit" onClick={deletar}>
-            Delete
-          </Button>
-        </td>
-      </tr>
-    </tbody>
-  );
-};
-
-const Edit = ({ id, email, name, surname, deletar, trocar }) => {
+const Edit = ({ id, email, name, surname, trocar }) => {
   return (
     <Form>
       <Form.Group className="mb-3" controlId="formBasicEmail">
         <Form.Label>New Email address</Form.Label>
-        <Form.Control required type="email" placeholder={email} />
+        <Form.Control required type="email" placeholder="email" />
       </Form.Group>
 
       <Form.Group className="mb-3" controlId="formBasicEmail">
         <Form.Label>New Name</Form.Label>
-        <Form.Control required type="email" placeholder={name} />
+        <Form.Control required type="email" placeholder="name" />
       </Form.Group>
 
       <Form.Group className="mb-3" controlId="formBasicEmail">
         <Form.Label>New Surname</Form.Label>
-        <Form.Control required type="email" placeholder={surname} />
+        <Form.Control required type="email" placeholder="surname" />
       </Form.Group>
 
       <Form.Group className="mb-3" controlId="formBasicPassword">
@@ -133,6 +117,9 @@ const Edit = ({ id, email, name, surname, deletar, trocar }) => {
       </Form.Group>
       <Button variant="primary" type="submit">
         Submit
+      </Button>
+      <Button className="m-2" variant="primary" type="submit" onClick={trocar}>
+        Go Back
       </Button>
     </Form>
   );

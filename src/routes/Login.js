@@ -39,6 +39,7 @@ const Login = () => {
       <Form.Group className="mb-3" controlId="formBasicEmail">
         <Form.Label>Email address</Form.Label>
         <Form.Control
+          required
           value={email}
           onChange={onChangeEmail}
           type="email"
@@ -49,6 +50,7 @@ const Login = () => {
       <Form.Group className="mb-3" controlId="formBasicPassword">
         <Form.Label>Password</Form.Label>
         <Form.Control
+          required
           value={pass}
           onChange={onChangePass}
           type="password"
