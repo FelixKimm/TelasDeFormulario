@@ -9,8 +9,8 @@ const SignUp = () => {
   const [surname, setSurname] = useState("");
   const [password, setPassword] = useState("");
   const [users, setUsers] = useState([]);
-  const firstRender = useRef(false);
   const [id, setId] = useState(1);
+  const firstRender = useRef(false);
 
   const onChangeEmail = (e) => {
     setEmail(e.target.value);

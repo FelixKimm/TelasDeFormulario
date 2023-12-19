@@ -28,7 +28,7 @@ const Login = () => {
 
     if (checkCredentials) {
       console.log("success");
-      navigate("/home");
+      navigate("/");
     } else {
       console.log("Wrong email or password");
     }

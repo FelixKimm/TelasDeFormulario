@@ -1,13 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Table from "react-bootstrap/Table";
 import "bootstrap/dist/css/bootstrap.min.css";
 import TableInfo from "../components/Table";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-// import Edit from "../components/Edit";
+import { Link } from "react-router-dom";
 
 const Home = () => {
   const [change, setChange] = useState(true);
+  const [selectValues, setSelectValues] = useState();
   const [dataBase, setDataBase] = useState([
     {
       id: 1,
@@ -41,70 +42,127 @@ const Home = () => {
     },
   ]);
 
+  const updateDB = useCallback(
+    (id, newEmail, newName, newSurname) => {
+      setDataBase((data) =>
+        data.map((i) =>
+          i.id === id
+            ? { ...i, email: newEmail, name: newName, surname: newSurname }
+            : i
+        )
+      );
+    },
+    [setDataBase]
+  );
+
   const deleteBtn = (id) => {
     setDataBase(dataBase.filter((i) => i.id !== id));
   };
 
-  const changeRender = () => {
+  const changeRender = (v) => {
     setChange(!change);
+    setSelectValues(v);
+    // console.log(v);
   };
 
   return (
     <>
       {change ? (
-        <Table striped bordered hover>
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>First Name</th>
-              <th>Last Name</th>
-              <th>Email</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {dataBase.map((m) => (
-              <TableInfo
-                key={m.id}
-                id={m.id}
-                email={m.email}
-                name={m.name}
-                surname={m.surname}
-                deletar={() => deleteBtn(m.id)}
-                trocar={changeRender}
-              />
-            ))}
-          </tbody>
-        </Table>
+        <>
+          <Table striped bordered hover>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {dataBase.map((m) => (
+                <TableInfo
+                  key={m.id}
+                  id={m.id}
+                  email={m.email}
+                  name={m.name}
+                  surname={m.surname}
+                  deletar={() => deleteBtn(m.id)}
+                  trocar={() => changeRender(m)}
+                />
+              ))}
+            </tbody>
+          </Table>
+          <Link to="/login">
+            <Button className="m-2" type="submit">
+              Sign off
+            </Button>
+          </Link>
+        </>
       ) : (
         <Edit
+          id={selectValues.id}
+          email={selectValues.email}
+          name={selectValues.name}
+          surname={selectValues.surname}
           trocar={changeRender}
-          // id={}
-          // email={}
-          // name={}
-          // surname={}
+          updateDB={updateDB}
         />
       )}
     </>
   );
 };
 
-const Edit = ({ id, email, name, surname, trocar }) => {
+const Edit = ({ id, email, name, surname, trocar, updateDB }) => {
+  const [newEmail, setNewEmail] = useState(email);
+  const [newName, setNewName] = useState(name);
+  const [newSurname, setNewSurname] = useState(surname);
+
+  useEffect(() => {
+    updateDB(id, newEmail, newName, newSurname);
+  }, [newEmail, newName, newSurname, id, updateDB]);
+
+  const submitEdit = (e) => {
+    console.log(e);
+    e.preventDefault();
+    setNewEmail(e.target[0].value);
+    setNewName(e.target[1].value);
+    setNewSurname(e.target[2].value);
+
+    // const newEmail = e.target[0].value;
+    // const newName = e.target[1].value;
+    // const newSurname = e.target[2].value;
+    // const newPassword = e.target[3].value;
+
+    updateDB(id, newEmail, newName, newSurname);
+
+    e.target[0].placeholder = newEmail;
+    e.target[0].value = "";
+
+    e.target[1].placeholder = newName;
+    e.target[1].value = "";
+
+    e.target[2].placeholder = newSurname;
+    e.target[2].value = "";
+
+    e.target[3].value = "";
+  };
+
   return (
-    <Form>
+    <Form onSubmit={submitEdit}>
       <Form.Group className="mb-3" controlId="formBasicEmail">
         <Form.Label>New Email address</Form.Label>
-        <Form.Control required type="email" placeholder="email" />
+        <Form.Control required type="email" placeholder={email} />
       </Form.Group>
 
-      <Form.Group className="mb-3" controlId="formBasicEmail">
+      <Form.Group className="mb-3" controlId="formBasicName">
         <Form.Label>New Name</Form.Label>
-        <Form.Control required type="email" placeholder="name" />
+        <Form.Control required type="text" placeholder={name} />
       </Form.Group>
 
-      <Form.Group className="mb-3" controlId="formBasicEmail">
+      <Form.Group className="mb-3" controlId="formBasicSurname">
         <Form.Label>New Surname</Form.Label>
-        <Form.Control required type="email" placeholder="surname" />
+        <Form.Control required type="text" placeholder={surname} />
       </Form.Group>
 
       <Form.Group className="mb-3" controlId="formBasicPassword">
